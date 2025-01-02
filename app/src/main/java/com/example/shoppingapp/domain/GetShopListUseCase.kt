@@ -1,5 +1,7 @@
 package com.example.shoppingapp.domain
 
+import kotlinx.coroutines.flow.StateFlow
+
 /*
     Принцип SOLID.
     S - single responsibility (принцип единой ответственности)
@@ -10,7 +12,7 @@ package com.example.shoppingapp.domain
 //Данный use-case должен работать только над получением списка покупок
 class GetShopListUseCase(private val repository: ShopListRepository) {
 
-    fun getShopList(): List<ShopItem> =
+    fun getShopList(): StateFlow<List<ShopItem>> =
         repository.getShopList()
 
 }

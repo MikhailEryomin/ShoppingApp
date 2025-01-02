@@ -2,10 +2,12 @@ package com.example.shoppingapp.data
 
 import com.example.shoppingapp.domain.ShopItem
 import com.example.shoppingapp.domain.ShopListRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class ShopListRepositoryImpl: ShopListRepository {
 
-    private val shopList = mutableListOf<ShopItem>()
+    private val shopList = MutableStateFlow<List<ShopItem>>(mutableListOf())
 
     private var autoIncrement = 0
 
@@ -19,7 +21,9 @@ class ShopListRepositoryImpl: ShopListRepository {
         if (item.id == ShopItem.UNDEFINED_ID) {
             item.id = autoIncrement++
         }
-        shopList.add(item)
+        val updatedList = shopList.value.toMutableList()
+        updatedList.add(item)
+        shopList.value = updatedList
     }
 
     override fun editShopItem(item: ShopItem) {
@@ -29,11 +33,15 @@ class ShopListRepositoryImpl: ShopListRepository {
     }
 
     override fun removeShopItem(item: ShopItem) {
-        shopList.remove(item)
+        val updatedList = shopList.value.toMutableList()
+        updatedList.remove(item)
+        shopList.value = updatedList
     }
 
     override fun getShopItem(itemID: Int): ShopItem? =
-    shopList.find { it.id == itemID }
+    shopList.value.find { it.id == itemID }
 
-    override fun getShopList(): List<ShopItem> = shopList
+    override fun getShopList(): StateFlow<List<ShopItem>> {
+        return shopList
+    }
 }

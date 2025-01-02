@@ -1,5 +1,7 @@
 package com.example.shoppingapp.domain
 
+import kotlinx.coroutines.flow.StateFlow
+
 /*
     Пока мы не знаем как конкретно реализовывать сущность
     которая работает с дата-слоем
@@ -17,6 +19,6 @@ interface ShopListRepository {
 
     fun getShopItem(itemID: Int): ShopItem?
 
-    fun getShopList(): List<ShopItem>
+    fun getShopList(): StateFlow<List<ShopItem>>
 
 }

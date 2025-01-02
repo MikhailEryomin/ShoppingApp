@@ -13,13 +13,14 @@ class MainActivity: AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
 
+    private var count = 0
+
     private var shopList = listOf<ShopItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        viewModel.getShopList()
 
         //Observing
         observingData()
@@ -30,6 +31,11 @@ class MainActivity: AppCompatActivity() {
             viewModel.shopList.collect {
                 shopList = it
                 Log.d("OBSERVE", it.toString())
+                if (count == 0) {
+                    count++
+                    val item = it[0]
+                    viewModel.changeEnableState(item)
+                }
             }
         }
     }
