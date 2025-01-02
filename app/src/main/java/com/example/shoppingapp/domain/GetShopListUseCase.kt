@@ -10,7 +10,7 @@ package com.example.shoppingapp.domain
 //Данный use-case должен работать только над получением списка покупок
 class GetShopListUseCase(private val repository: ShopListRepository) {
 
-    fun getShopListUseCase(): List<ShopItem> =
+    fun getShopList(): List<ShopItem> =
         repository.getShopList()
 
 }
