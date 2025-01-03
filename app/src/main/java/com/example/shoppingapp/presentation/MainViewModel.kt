@@ -13,6 +13,7 @@ class MainViewModel: ViewModel() {
 
     /*
         presentation-слой должен знать всё о domain слое
+        и ничего не должен знать о data слое
      */
 
     private val repository = ShopListRepositoryImpl()
@@ -21,16 +22,14 @@ class MainViewModel: ViewModel() {
     private val getShopListUseCase = GetShopListUseCase(repository)
     private val removeShopListUseCase = RemoveShopItemUseCase(repository)
 
-    //states
+    //stateFlow
     val shopList = getShopListUseCase.getShopList()
 
     fun removeShopItem(item: ShopItem) {
         removeShopListUseCase.removeShopItem(item)
-        //getShopList()
     }
     fun changeEnableState(item: ShopItem) {
         val newItem = item.copy(enabled = !item.enabled)
         editShopItemUseCase.editShopItem(newItem)
-        //getShopList()
     }
 }

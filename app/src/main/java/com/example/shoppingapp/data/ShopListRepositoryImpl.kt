@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class ShopListRepositoryImpl: ShopListRepository {
 
-    private val shopList = MutableStateFlow<List<ShopItem>>(mutableListOf())
+    private val shopList = MutableStateFlow<List<ShopItem>>(listOf())
 
     private var autoIncrement = 0
 
