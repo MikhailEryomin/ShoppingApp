@@ -4,6 +4,7 @@ import com.example.shoppingapp.domain.ShopItem
 import com.example.shoppingapp.domain.ShopListRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.random.Random
 
 class ShopListRepositoryImpl: ShopListRepository {
 
@@ -13,8 +14,8 @@ class ShopListRepositoryImpl: ShopListRepository {
     private var autoIncrement = 0
 
     init {
-        for (i in 0 until 16) {
-            addShopItem(ShopItem(name = "name $i", i, true))
+        for (i in 0 until 1000) {
+            addShopItem(ShopItem(name = "name $i", i, Random.nextBoolean()))
         }
     }
 
