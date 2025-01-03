@@ -7,12 +7,13 @@ import kotlinx.coroutines.flow.StateFlow
 
 class ShopListRepositoryImpl: ShopListRepository {
 
-    private val shopList = MutableStateFlow<List<ShopItem>>(listOf())
+    private val shopListFlow = MutableStateFlow<List<ShopItem>>(listOf())
+    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
 
     private var autoIncrement = 0
 
     init {
-        for (i in 0 until 10) {
+        for (i in 0 until 16) {
             addShopItem(ShopItem(name = "name $i", i, true))
         }
     }
@@ -21,9 +22,8 @@ class ShopListRepositoryImpl: ShopListRepository {
         if (item.id == ShopItem.UNDEFINED_ID) {
             item.id = autoIncrement++
         }
-        val updatedList = shopList.value.toMutableList()
-        updatedList.add(item)
-        shopList.value = updatedList
+        shopList.add(item)
+        updateListFlow()
     }
 
     override fun editShopItem(item: ShopItem) {
@@ -33,15 +33,18 @@ class ShopListRepositoryImpl: ShopListRepository {
     }
 
     override fun removeShopItem(item: ShopItem) {
-        val updatedList = shopList.value.toMutableList()
-        updatedList.remove(item)
-        shopList.value = updatedList
+        shopList.remove(item)
+        updateListFlow()
     }
 
     override fun getShopItem(itemID: Int): ShopItem? =
-    shopList.value.find { it.id == itemID }
+    shopList.find { it.id == itemID }
 
     override fun getShopList(): StateFlow<List<ShopItem>> {
-        return shopList
+        return shopListFlow
+    }
+
+    private fun updateListFlow() {
+        shopListFlow.value = shopList.toList()
     }
 }
