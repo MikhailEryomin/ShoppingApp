@@ -28,7 +28,7 @@ object ShopItemSwipeCallBack {
             //Remove swiped item from list and notify the RecyclerView
             val position = viewHolder.adapterPosition
             if (adapter != null) {
-                viewModel?.removeShopItem(adapter!!.shopList[position])
+                viewModel?.removeShopItem(adapter!!.currentList[position])
             }
         }
     }

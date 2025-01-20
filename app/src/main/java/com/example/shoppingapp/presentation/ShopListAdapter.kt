@@ -5,22 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingapp.R
 import com.example.shoppingapp.domain.ShopItem
 
 
-class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopListViewHolder>() {
-
-    var shopList = listOf<ShopItem>()
-        set(value) {
-            val callBack = ShopListDiffCallBack(shopList, value)
-            val diffResult = DiffUtil.calculateDiff(callBack)
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-            //notifyDataSetChanged()
-        }
-
+class ShopListAdapter : ListAdapter<ShopItem, ShopListAdapter.ShopListViewHolder>(ShopItemDiffCallBack()) {
 
     var onShopItemHoldClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
@@ -37,12 +28,8 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopListViewHolder>
         return ShopListViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return shopList.size
-    }
-
     override fun onBindViewHolder(holder: ShopListViewHolder, position: Int) {
-        val item = shopList[position]
+        val item = getItem(position)
         holder.tvName.text = "${item.name} ${item.enabled}"
         holder.tvCount.text = item.count.toString()
         holder.itemView.setOnLongClickListener {
@@ -57,7 +44,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopListViewHolder>
 
 
     override fun getItemViewType(position: Int): Int {
-        val item = shopList[position]
+        val item = getItem(position)
         return if (item.enabled) VIEW_TYPE_ENABLED else VIEW_TYPE_DISABLED
     }
 

@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.shopList.collect {
                 shopList = it
-                adapter.shopList = shopList
+                adapter.submitList(it)
             }
         }
     }
