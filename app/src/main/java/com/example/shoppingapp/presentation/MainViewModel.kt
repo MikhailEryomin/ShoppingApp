@@ -25,11 +25,30 @@ class MainViewModel: ViewModel() {
     //stateFlow
     val shopList = getShopListUseCase.getShopList()
 
-    fun removeShopItem(item: ShopItem) {
-        removeShopListUseCase.removeShopItem(item)
+    // USE-CASES
+
+    fun addShopItem() {
+
     }
+
+    fun editShopItem() {
+
+    }
+
     fun changeEnableState(item: ShopItem) {
         val newItem = item.copy(enabled = !item.enabled)
         editShopItemUseCase.editShopItem(newItem)
+    }
+
+    fun getShopItem() {
+
+    }
+
+    fun getShopItemList() {
+
+    }
+
+    fun removeShopItem(item: ShopItem) {
+        removeShopListUseCase.removeShopItem(item)
     }
 }
