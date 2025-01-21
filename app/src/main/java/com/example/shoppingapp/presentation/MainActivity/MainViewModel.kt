@@ -1,13 +1,11 @@
-package com.example.shoppingapp.presentation
+package com.example.shoppingapp.presentation.MainActivity
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.shoppingapp.data.ShopListRepositoryImpl
 import com.example.shoppingapp.domain.EditShopItemUseCase
 import com.example.shoppingapp.domain.GetShopListUseCase
 import com.example.shoppingapp.domain.RemoveShopItemUseCase
 import com.example.shoppingapp.domain.ShopItem
-import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
 
@@ -16,7 +14,7 @@ class MainViewModel: ViewModel() {
         и ничего не должен знать о data слое
      */
 
-    private val repository = ShopListRepositoryImpl()
+    private val repository = ShopListRepositoryImpl
 
     private val editShopItemUseCase = EditShopItemUseCase(repository)
     private val getShopListUseCase = GetShopListUseCase(repository)
@@ -27,25 +25,9 @@ class MainViewModel: ViewModel() {
 
     // USE-CASES
 
-    fun addShopItem() {
-
-    }
-
-    fun editShopItem() {
-
-    }
-
     fun changeEnableState(item: ShopItem) {
         val newItem = item.copy(enabled = !item.enabled)
         editShopItemUseCase.editShopItem(newItem)
-    }
-
-    fun getShopItem() {
-
-    }
-
-    fun getShopItemList() {
-
     }
 
     fun removeShopItem(item: ShopItem) {

@@ -1,9 +1,8 @@
-package com.example.shoppingapp.presentation
+package com.example.shoppingapp.presentation.MainActivity
 
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
-import android.widget.Toast
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -11,6 +10,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingapp.R
 import com.example.shoppingapp.domain.ShopItem
+import com.example.shoppingapp.presentation.ShopItemActivity.ShopItemActivity
+import com.example.shoppingapp.presentation.ShopItemSwipeCallBack
+import com.example.shoppingapp.presentation.ShopListAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 
 
@@ -27,6 +30,15 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         setupShopList()
         observingData()
+        setupAddButton()
+    }
+
+    private fun setupAddButton() {
+        val addButton = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
+        addButton.setOnClickListener {
+            val intent = ShopItemActivity.newIntentAddItem(this)
+            startActivity(intent)
+        }
     }
 
     private fun observingData() {
@@ -34,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.shopList.collect {
                 shopList = it
                 adapter.submitList(it)
+                Log.d("ADD", adapter.currentList.toString())
             }
         }
     }
@@ -67,11 +80,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setShopItemClickListener() {
-        adapter.onShopItemClickListener = {
-            Log.d(
-                "SHOPITEM_INFO",
-                "Item: id: ${it.id}, name: ${it.name}, count: ${it.count}, enabled: ${it.enabled}"
-            )
+        adapter.onShopItemClickListener = { item ->
+            val intent = ShopItemActivity.newIntentEditItem(this, item.id)
+            startActivity(intent)
         }
     }
 

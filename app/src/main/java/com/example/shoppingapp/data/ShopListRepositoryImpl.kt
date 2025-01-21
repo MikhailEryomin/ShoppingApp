@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.random.Random
 
-class ShopListRepositoryImpl: ShopListRepository {
+object ShopListRepositoryImpl: ShopListRepository {
 
     private val shopListFlow = MutableStateFlow<List<ShopItem>>(listOf())
     private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
@@ -14,7 +14,7 @@ class ShopListRepositoryImpl: ShopListRepository {
     private var autoIncrement = 0
 
     init {
-        for (i in 0 until 1000) {
+        for (i in 0 until 20) {
             addShopItem(ShopItem(name = "name $i", i, Random.nextBoolean()))
         }
     }
