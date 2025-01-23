@@ -1,7 +1,6 @@
 package com.example.shoppingapp.presentation.ShopItemActivity
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,8 +9,6 @@ import com.example.shoppingapp.domain.AddShopItemUseCase
 import com.example.shoppingapp.domain.EditShopItemUseCase
 import com.example.shoppingapp.domain.GetShopItemUseCase
 import com.example.shoppingapp.domain.ShopItem
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 class ShopItemViewModel : ViewModel() {
 
@@ -31,9 +28,9 @@ class ShopItemViewModel : ViewModel() {
     val errorInputCount: LiveData<Boolean>
         get() = _errorInputCount
 
-    private val _selectedShopItem = MutableLiveData<ShopItem>()
-    val selectedShopItem: LiveData<ShopItem>
-        get() = _selectedShopItem
+    private val _shopItem = MutableLiveData<ShopItem>()
+    val shopItem: LiveData<ShopItem>
+        get() = _shopItem
 
     private val _shouldCloseWindow = MutableLiveData<Unit>()
     val shouldCloseWindow: LiveData<Unit>
@@ -46,7 +43,7 @@ class ShopItemViewModel : ViewModel() {
 
     fun getShopItem(itemId: Int) {
         val item = getShopItemUseCase.getShopItem(itemId)
-        _selectedShopItem.value = item
+        _shopItem.value = item
     }
 
     fun addShopItem(inputName: String, inputCount: String) {
@@ -67,7 +64,7 @@ class ShopItemViewModel : ViewModel() {
         val newCount = parseCount(inputCount)
         val newIsValid = validateString(newName, newCount)
         if (newIsValid) {
-            _selectedShopItem.value?.let {
+            _shopItem.value?.let {
                 val newItem = it.copy(name = newName, count = newCount)
                 editShopItemUseCase.editShopItem(newItem)
                 finishWork()

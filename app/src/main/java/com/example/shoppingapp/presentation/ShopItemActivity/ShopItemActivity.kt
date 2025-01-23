@@ -22,93 +22,96 @@ class ShopItemActivity : AppCompatActivity() {
     private var errorInputName: Boolean = false
     private var errorInputCount: Boolean = false
 
-    private var screenMode: String? = null
+    private var screenMode: String = MODE_UNKNOWN
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
-        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         parseIntent()
-        observeViewModel()
-        initViews()
-        setupSaveButton()
-    }
-
-    private fun initViews() {
-        nameTextInput = findViewById(R.id.et_name)
-        countTextInput = findViewById(R.id.et_count)
-        saveButton = findViewById(R.id.save_button)
+        launchRightMode(screenMode, shopItemId)
     }
 
     private fun parseIntent() {
         val hasModeExtra = intent.hasExtra(EXTRA_MODE)
         if (!hasModeExtra) throw RuntimeException(getString(R.string.screen_mode_error_msg))
+
         screenMode = intent.getStringExtra(EXTRA_MODE).toString()
         if (screenMode == EDIT_ITEM_MODE) {
             val hasItemIdExtra = intent.hasExtra(ITEM_ID)
             if (!hasItemIdExtra) throw RuntimeException(getString(R.string.item_id_error_msg))
-            val itemId = intent.getIntExtra(ITEM_ID, -1)
-            viewModel.getShopItem(itemId)
         }
+        shopItemId = intent.getIntExtra(ITEM_ID, -1)
     }
 
-    private fun observeViewModel() {
-        viewModel.errorInputName.observe(this) {
-            errorInputName = it
-            if (errorInputName) showError(isNameError = true) else cleanErrors()
-        }
-        viewModel.errorInputCount.observe(this) {
-            errorInputCount = it
-            if (errorInputCount) showError(isNameError = false) else cleanErrors()
-        }
-        viewModel.selectedShopItem.observe(this) {
-            selectedShopItem = it
-            updateTextFields(it.name, it.count.toString())
-        }
-        viewModel.shouldCloseWindow.observe(this) {
-            finish()
-        }
-    }
+    private fun launchRightMode(screenMode: String, shopItemId: Int) {
 
-    private fun setupSaveButton() {
-
-        saveButton.setOnClickListener {
-            val nameStr = nameTextInput.text.toString()
-            val countStr = countTextInput.text.toString()
-            when (screenMode) {
-                ADD_ITEM_MODE -> viewModel.addShopItem(
-                    nameStr,
-                    countStr
-                )
-                EDIT_ITEM_MODE -> viewModel.editShopItem(
-                    nameStr,
-                    countStr
-                )
-            }
+        val fragment = when (screenMode) {
+            ADD_ITEM_MODE -> ShopItemFragment.newInstanceAdd()
+            EDIT_ITEM_MODE -> ShopItemFragment.newInstanceEdit(shopItemId)
+            else -> throw RuntimeException("Illegal screenMode param value")
         }
+        supportFragmentManager.beginTransaction().add(R.id.fragment_container, fragment).commit()
 
     }
-
-    private fun updateTextFields(nameInput: String?, countInput: String?) {
-        nameTextInput.setText(nameInput)
-        countTextInput.setText(countInput)
-    }
-
-    private fun showError(isNameError: Boolean) {
-        when (isNameError) {
-            true -> nameTextInput.error = "Invalid name!"
-            false -> countTextInput.error = "Invalid count!"
-        }
-    }
-
-    private fun cleanErrors() {
-        nameTextInput.error = null
-        countTextInput.error = null
-    }
+//
+//    private fun observeViewModel() {
+//        viewModel.errorInputName.observe(this) {
+//            errorInputName = it
+//            if (errorInputName) showError(isNameError = true) else cleanErrors()
+//        }
+//        viewModel.errorInputCount.observe(this) {
+//            errorInputCount = it
+//            if (errorInputCount) showError(isNameError = false) else cleanErrors()
+//        }
+//        viewModel.selectedShopItem.observe(this) {
+//            selectedShopItem = it
+//            updateTextFields(it.name, it.count.toString())
+//        }
+//        viewModel.shouldCloseWindow.observe(this) {
+//            finish()
+//        }
+//    }
+//
+//    private fun setupSaveButton() {
+//
+//        saveButton.setOnClickListener {
+//            val nameStr = nameTextInput.text.toString()
+//            val countStr = countTextInput.text.toString()
+//            when (screenMode) {
+//                ADD_ITEM_MODE -> viewModel.addShopItem(
+//                    nameStr,
+//                    countStr
+//                )
+//                EDIT_ITEM_MODE -> viewModel.editShopItem(
+//                    nameStr,
+//                    countStr
+//                )
+//            }
+//        }
+//
+//    }
+//
+//    private fun updateTextFields(nameInput: String?, countInput: String?) {
+//        nameTextInput.setText(nameInput)
+//        countTextInput.setText(countInput)
+//    }
+//
+//    private fun showError(isNameError: Boolean) {
+//        when (isNameError) {
+//            true -> nameTextInput.error = "Invalid name!"
+//            false -> countTextInput.error = "Invalid count!"
+//        }
+//    }
+//
+//    private fun cleanErrors() {
+//        nameTextInput.error = null
+//        countTextInput.error = null
+//    }
 
     companion object {
 
+        private const val MODE_UNKNOWN = "mode_unknown"
         private const val EXTRA_MODE = "extra_mode"
         private const val ITEM_ID = "item_id"
         private const val ADD_ITEM_MODE = "add_item_mode"
