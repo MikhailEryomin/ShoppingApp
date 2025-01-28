@@ -1,4 +1,4 @@
-package com.example.shoppingapp.presentation.ShopItemActivity
+package com.example.shoppingapp.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoppingapp.R
+import com.example.shoppingapp.databinding.FragmentShopItemBinding
 import com.example.shoppingapp.domain.ShopItem
 import com.google.android.material.textfield.TextInputEditText
 
@@ -15,6 +16,11 @@ class ShopItemFragment(
     private val screenMode: String = MODE_UNKNOWN,
     private val shopItemId: Int = ShopItem.UNDEFINED_ID
 ) : Fragment() {
+
+    private var _binding: FragmentShopItemBinding? = null
+    private val binding: FragmentShopItemBinding
+        get() = _binding ?: throw RuntimeException("FragmentShopItemBinding = null")
+
 
     private lateinit var viewModel: ShopItemViewModel
     private lateinit var shopItem: ShopItem
@@ -30,15 +36,22 @@ class ShopItemFragment(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_shop_item, container, false)
+    ): View {
+        _binding = FragmentShopItemBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         parseParams()
-        initViews(view)
+        initViews()
         observeViewModel()
         setupSaveButton()
     }
@@ -49,25 +62,14 @@ class ShopItemFragment(
         }
     }
 
-    private fun initViews(view: View) {
-        nameTextInput = view.findViewById(R.id.et_name)
-        countTextInput = view.findViewById(R.id.et_count)
-        saveButton = view.findViewById(R.id.save_button)
+    private fun initViews() {
+        nameTextInput = binding.etName
+        countTextInput = binding.etCount
+        saveButton = binding.saveButton
     }
 
     private fun observeViewModel() {
-        viewModel.errorInputName.observe(viewLifecycleOwner) {
-            errorInputName = it
-            if (errorInputName) showError(isNameError = true) else cleanErrors()
-        }
-        viewModel.errorInputCount.observe(viewLifecycleOwner) {
-            errorInputCount = it
-            if (errorInputCount) showError(isNameError = false) else cleanErrors()
-        }
-        viewModel.shopItem.observe(viewLifecycleOwner) {
-            shopItem = it
-            updateTextFields(it.name, it.count.toString())
-        }
+        binding.viewModel = viewModel
         viewModel.shouldCloseWindow.observe(viewLifecycleOwner) {
             activity?.onBackPressed()
         }
@@ -91,23 +93,6 @@ class ShopItemFragment(
             }
         }
 
-    }
-
-    private fun updateTextFields(nameInput: String?, countInput: String?) {
-        nameTextInput.setText(nameInput)
-        countTextInput.setText(countInput)
-    }
-
-    private fun showError(isNameError: Boolean) {
-        when (isNameError) {
-            true -> nameTextInput.error = "Invalid name!"
-            false -> countTextInput.error = "Invalid count!"
-        }
-    }
-
-    private fun cleanErrors() {
-        nameTextInput.error = null
-        countTextInput.error = null
     }
 
     companion object {

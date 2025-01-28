@@ -4,6 +4,8 @@
     <string name="count_hint">Count:</string>
     <string name="name_hint">Name:</string>
     <string name="save_btn">Save</string>
+    <string name="name_input_error">Invalid name!</string>
+    <string name="count_input_error">Invalid count!</string>
     <string name="screen_mode_error_msg">ScreenMode param is not defined</string>
     <string name="item_id_error_msg">Selected itemId to edit is not defined. Nothing to edit.</string>
 </resources>

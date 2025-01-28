@@ -2,7 +2,6 @@ package com.example.shoppingapp.presentation
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.shoppingapp.presentation.MainActivity.MainViewModel
 
 object ShopItemSwipeCallBack {
 

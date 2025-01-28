@@ -1,4 +1,4 @@
-package com.example.shoppingapp.presentation.ShopItemActivity
+package com.example.shoppingapp.presentation
 
 import android.util.Log
 import androidx.lifecycle.LiveData

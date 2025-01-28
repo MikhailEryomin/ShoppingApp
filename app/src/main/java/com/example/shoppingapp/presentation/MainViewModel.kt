@@ -1,4 +1,4 @@
-package com.example.shoppingapp.presentation.MainActivity
+package com.example.shoppingapp.presentation
 
 import androidx.lifecycle.ViewModel
 import com.example.shoppingapp.data.ShopListRepositoryImpl
