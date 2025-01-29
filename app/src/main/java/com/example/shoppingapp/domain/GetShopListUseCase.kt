@@ -1,5 +1,6 @@
 package com.example.shoppingapp.domain
 
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.StateFlow
 
 /*
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 //Данный use-case должен работать только над получением списка покупок
 class GetShopListUseCase(private val repository: ShopListRepository) {
 
-    fun getShopList(): StateFlow<List<ShopItem>> =
+    fun getShopList(): LiveData<List<ShopItem>> =
         repository.getShopList()
 
 }

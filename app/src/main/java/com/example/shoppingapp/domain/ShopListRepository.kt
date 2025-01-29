@@ -1,6 +1,6 @@
 package com.example.shoppingapp.domain
 
-import kotlinx.coroutines.flow.StateFlow
+import androidx.lifecycle.LiveData
 
 /*
     Пока мы не знаем как конкретно реализовывать сущность
@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface ShopListRepository {
 
-    fun addShopItem(item: ShopItem)
+    suspend fun addShopItem(item: ShopItem)
 
-    fun editShopItem(item: ShopItem)
+    suspend fun editShopItem(item: ShopItem)
 
-    fun removeShopItem(item: ShopItem)
+    suspend fun removeShopItem(item: ShopItem)
 
-    fun getShopItem(itemID: Int): ShopItem?
+    suspend fun getShopItem(itemID: Int): ShopItem
 
-    fun getShopList(): StateFlow<List<ShopItem>>
+    fun getShopList(): LiveData<List<ShopItem>>
 
 }

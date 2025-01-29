@@ -1,51 +1,39 @@
 package com.example.shoppingapp.data
 
+import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import com.example.shoppingapp.domain.ShopItem
 import com.example.shoppingapp.domain.ShopListRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlin.random.Random
 
-object ShopListRepositoryImpl: ShopListRepository {
+class ShopListRepositoryImpl(
+    application: Application
+): ShopListRepository {
 
-    private val shopListFlow = MutableStateFlow<List<ShopItem>>(listOf())
-    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
+    private val shopListDao = AppDataBase.getInstance(application).shopListDao()
+    private val mapper = ShopListMapper()
 
-    private var autoIncrement = 0
+    override suspend fun addShopItem(item: ShopItem) {
+        shopListDao.addShopItem(mapper.entityToDbModel(item))
+    }
 
-    init {
-        for (i in 0 until 20) {
-            addShopItem(ShopItem(name = "name $i", i, Random.nextBoolean()))
+    override suspend fun editShopItem(item: ShopItem) {
+        shopListDao.addShopItem(mapper.entityToDbModel(item))
+    }
+
+    override suspend fun removeShopItem(item: ShopItem) {
+        shopListDao.removeShopItem(item.id)
+    }
+
+    override suspend fun getShopItem(itemID: Int): ShopItem {
+        val dbModel = shopListDao.getShopItem(itemID)
+        return mapper.dbModelToEntity(dbModel)
+    }
+
+    override fun getShopList(): LiveData<List<ShopItem>> =
+        MediatorLiveData<List<ShopItem>>().apply {
+            addSource(shopListDao.getShopList()) {
+                value = mapper.dbModelListToEntityList(it)
+            }
         }
-    }
-
-    override fun addShopItem(item: ShopItem) {
-        if (item.id == ShopItem.UNDEFINED_ID) {
-            item.id = autoIncrement++
-        }
-        shopList.add(item)
-        updateListFlow()
-    }
-
-    override fun editShopItem(item: ShopItem) {
-        val oldItem = getShopItem(item.id) ?: throw IllegalArgumentException("Invalid item")
-        removeShopItem(oldItem)
-        addShopItem(item)
-    }
-
-    override fun removeShopItem(item: ShopItem) {
-        shopList.remove(item)
-        updateListFlow()
-    }
-
-    override fun getShopItem(itemID: Int): ShopItem? =
-    shopList.find { it.id == itemID }
-
-    override fun getShopList(): StateFlow<List<ShopItem>> {
-        return shopListFlow
-    }
-
-    private fun updateListFlow() {
-        shopListFlow.value = shopList.toList()
-    }
 }

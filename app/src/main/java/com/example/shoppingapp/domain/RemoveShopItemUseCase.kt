@@ -10,7 +10,7 @@ package com.example.shoppingapp.domain
 // Данный use-case должен работать только над удалением элемента из списка покупок
 class RemoveShopItemUseCase(private val repository: ShopListRepository) {
 
-    fun removeShopItem(item: ShopItem) {
+    suspend fun removeShopItem(item: ShopItem) {
         repository.removeShopItem(item)
     }
 

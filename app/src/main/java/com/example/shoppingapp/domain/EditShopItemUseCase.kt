@@ -10,7 +10,7 @@ package com.example.shoppingapp.domain
 // Данный use-case должен работать только над изменением элемента в списке покупок
 class EditShopItemUseCase(private val repository: ShopListRepository) {
 
-    fun editShopItem(item: ShopItem) {
+    suspend fun editShopItem(item: ShopItem) {
         repository.editShopItem(item)
     }
 

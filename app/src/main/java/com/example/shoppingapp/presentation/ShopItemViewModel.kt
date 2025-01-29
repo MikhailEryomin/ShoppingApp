@@ -1,24 +1,25 @@
 package com.example.shoppingapp.presentation
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shoppingapp.data.ShopListRepositoryImpl
 import com.example.shoppingapp.domain.AddShopItemUseCase
 import com.example.shoppingapp.domain.EditShopItemUseCase
 import com.example.shoppingapp.domain.GetShopItemUseCase
 import com.example.shoppingapp.domain.ShopItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
-class ShopItemViewModel : ViewModel() {
-
-    // USE-CASES:
-
-    /*
-    1) getting an item by id
-    2) editing an item
-    3) adding an item
-     */
+class ShopItemViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
@@ -36,14 +37,16 @@ class ShopItemViewModel : ViewModel() {
     val shouldCloseWindow: LiveData<Unit>
         get() = _shouldCloseWindow
 
-    private val repository = ShopListRepositoryImpl
+    private val repository = ShopListRepositoryImpl(application)
     private val getShopItemUseCase = GetShopItemUseCase(repository)
     private val editShopItemUseCase = EditShopItemUseCase(repository)
     private val addShopItemUseCase = AddShopItemUseCase(repository)
 
     fun getShopItem(itemId: Int) {
-        val item = getShopItemUseCase.getShopItem(itemId)
-        _shopItem.value = item
+        viewModelScope.launch {
+            val item = getShopItemUseCase.getShopItem(itemId)
+            _shopItem.value = item
+        }
     }
 
     fun addShopItem(inputName: String, inputCount: String) {
@@ -52,9 +55,11 @@ class ShopItemViewModel : ViewModel() {
         val isValid = validateString(name, count)
         if (isValid) {
             val item = ShopItem(name, count, true)
-            addShopItemUseCase.addShopItem(item)
-            Log.d("ADD", "Adding an item completed successfully.")
-            finishWork()
+            viewModelScope.launch {
+                addShopItemUseCase.addShopItem(item)
+                Log.d("ADD", "Adding an item completed successfully.")
+                finishWork()
+            }
         }
     }
 
@@ -66,8 +71,10 @@ class ShopItemViewModel : ViewModel() {
         if (newIsValid) {
             _shopItem.value?.let {
                 val newItem = it.copy(name = newName, count = newCount)
-                editShopItemUseCase.editShopItem(newItem)
-                finishWork()
+                viewModelScope.launch {
+                    editShopItemUseCase.editShopItem(newItem)
+                    finishWork()
+                }
             }
         }
     }

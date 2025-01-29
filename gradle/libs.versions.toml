@@ -1,14 +1,14 @@
 [versions]
-agp = "8.5.0"
-kotlin = "1.9.0"
+agp = "8.5.2"
+kotlin = "2.0.20"
 coreKtx = "1.15.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
+junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
-material = "1.10.0"
-viewmodel-scope = "2.6.2"
-kapt = "2.1.20-Beta1"
+material = "1.12.0"
+viewmodel-scope = "2.8.7"
+room_version = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -18,9 +18,15 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+#Библиотека Room
+room = {group = "androidx.room", name = "room-runtime", version.ref = "room_version"}
+#Кодогенератор
+room-compiler = {group="androidx.room", name = "room-compiler", version.ref ="room_version"}
+#optional - Kotlin Extensions and Coroutines support for Room
+room-ktx = {group = "androidx.room", name = "room-ktx", version.ref = "room_version"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt" }
+kapt = {id = "org.jetbrains.kotlin.kapt", version.ref ="kotlin"}
 

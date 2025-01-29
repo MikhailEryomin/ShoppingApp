@@ -15,7 +15,7 @@ class AddShopItemUseCase(private val repository: ShopListRepository) {
         должен заниматься всеми операциями
         Поэтому реализация методов в юзкейсе - вызов метода репозитория
      */
-    fun addShopItem(item: ShopItem) {
+    suspend fun addShopItem(item: ShopItem) {
         repository.addShopItem(item)
     }
 

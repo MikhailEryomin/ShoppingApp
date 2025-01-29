@@ -20,9 +20,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var viewModel: MainViewModel
-    private var shopList = listOf<ShopItem>()
 
     private val adapter = ShopListAdapter()
     private var shopItemContainer: FragmentContainerView? = null
@@ -62,11 +60,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observingData() {
-        lifecycleScope.launch {
-            viewModel.shopList.collect {
-                shopList = it
-                adapter.submitList(it)
-            }
+        viewModel.shopList.observe(this) {
+            adapter.submitList(it)
         }
     }
 

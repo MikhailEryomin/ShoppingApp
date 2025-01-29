@@ -10,7 +10,7 @@ package com.example.shoppingapp.domain
 // Данный use-case должен работать только над получением конкретного элемента
 class GetShopItemUseCase(private val repository: ShopListRepository) {
 
-    fun getShopItem(itemId: Int): ShopItem? {
+    suspend fun getShopItem(itemId: Int): ShopItem {
         return repository.getShopItem(itemId)
     }
 
