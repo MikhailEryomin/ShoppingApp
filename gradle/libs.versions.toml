@@ -9,6 +9,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 viewmodel-scope = "2.8.7"
 room_version = "2.6.1"
+dagger = "2.51.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -24,6 +25,9 @@ room = {group = "androidx.room", name = "room-runtime", version.ref = "room_vers
 room-compiler = {group="androidx.room", name = "room-compiler", version.ref ="room_version"}
 #optional - Kotlin Extensions and Coroutines support for Room
 room-ktx = {group = "androidx.room", name = "room-ktx", version.ref = "room_version"}
+#Dagger
+dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
+dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

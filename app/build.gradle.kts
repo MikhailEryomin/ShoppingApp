@@ -47,9 +47,14 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
+    //Room
     implementation(libs.room)
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
+
+    //Dagger
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,33 +1,24 @@
 package com.example.shoppingapp.presentation
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shoppingapp.data.ShopListRepositoryImpl
 import com.example.shoppingapp.domain.EditShopItemUseCase
 import com.example.shoppingapp.domain.GetShopListUseCase
 import com.example.shoppingapp.domain.RemoveShopItemUseCase
 import com.example.shoppingapp.domain.ShopItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(
-    application: Application
-): AndroidViewModel(application) {
+class MainViewModel @Inject constructor(
+    private val editShopItemUseCase: EditShopItemUseCase,
+    private val getShopListUseCase: GetShopListUseCase,
+    private val removeShopListUseCase: RemoveShopItemUseCase
+) : ViewModel() {
 
     /*
         presentation-слой должен знать всё о domain слое
         и ничего не должен знать о data слое
      */
-
-    private val repository = ShopListRepositoryImpl(application)
-
-    private val editShopItemUseCase = EditShopItemUseCase(repository)
-    private val getShopListUseCase = GetShopListUseCase(repository)
-    private val removeShopListUseCase = RemoveShopItemUseCase(repository)
 
     //stateFlow
     val shopList = getShopListUseCase.getShopList()

@@ -2,6 +2,7 @@ package com.example.shoppingapp.domain
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
 /*
     Принцип SOLID.
@@ -11,7 +12,9 @@ import kotlinx.coroutines.flow.StateFlow
  */
 
 //Данный use-case должен работать только над получением списка покупок
-class GetShopListUseCase(private val repository: ShopListRepository) {
+class GetShopListUseCase @Inject constructor (
+    private val repository: ShopListRepository
+) {
 
     fun getShopList(): LiveData<List<ShopItem>> =
         repository.getShopList()

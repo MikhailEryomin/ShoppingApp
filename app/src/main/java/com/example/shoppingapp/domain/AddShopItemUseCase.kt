@@ -1,5 +1,7 @@
 package com.example.shoppingapp.domain
 
+import javax.inject.Inject
+
 /*
     Принцип SOLID.
     S - single responsibility (принцип единой ответственности)
@@ -8,7 +10,9 @@ package com.example.shoppingapp.domain
  */
 
 // Данный use-case должен работать только над добавлением элемента в список
-class AddShopItemUseCase(private val repository: ShopListRepository) {
+class AddShopItemUseCase @Inject constructor(
+    private val repository: ShopListRepository
+) {
 
     /*
         Мы создали и описали интерфейс репозитория, который по факту

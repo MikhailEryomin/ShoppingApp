@@ -1,5 +1,7 @@
 package com.example.shoppingapp.domain
 
+import javax.inject.Inject
+
 /*
     Принцип SOLID.
     S - single responsibility (принцип единой ответственности)
@@ -8,7 +10,9 @@ package com.example.shoppingapp.domain
  */
 
 // Данный use-case должен работать только над получением конкретного элемента
-class GetShopItemUseCase(private val repository: ShopListRepository) {
+class GetShopItemUseCase @Inject constructor (
+    private val repository: ShopListRepository
+) {
 
     suspend fun getShopItem(itemId: Int): ShopItem {
         return repository.getShopItem(itemId)
