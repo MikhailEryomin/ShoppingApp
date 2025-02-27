@@ -9,6 +9,9 @@ import com.example.shoppingapp.domain.AddShopItemUseCase
 import com.example.shoppingapp.domain.EditShopItemUseCase
 import com.example.shoppingapp.domain.GetShopItemUseCase
 import com.example.shoppingapp.domain.ShopItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,6 +20,8 @@ class ShopItemViewModel @Inject constructor (
     private val editShopItemUseCase: EditShopItemUseCase,
     private val addShopItemUseCase: AddShopItemUseCase
 ) : ViewModel() {
+
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
@@ -49,11 +54,18 @@ class ShopItemViewModel @Inject constructor (
         if (isValid) {
             val item = ShopItem(name, count, true)
             viewModelScope.launch {
-                addShopItemUseCase.addShopItem(item)
+                scope.launch {
+                    addShopItemUseCase.addShopItem(item)
+                }
                 Log.d("ADD", "Adding an item completed successfully.")
                 finishWork()
             }
         }
+    }
+
+    override fun onCleared() {
+        scope.cancel()
+        super.onCleared()
     }
 
     fun editShopItem(inputName: String, inputCount: String) {

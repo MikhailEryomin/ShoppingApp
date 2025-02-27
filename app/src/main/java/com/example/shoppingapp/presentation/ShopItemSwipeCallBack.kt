@@ -2,6 +2,7 @@ package com.example.shoppingapp.presentation
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.concurrent.thread
 
 object ShopItemSwipeCallBack {
 
@@ -26,9 +27,11 @@ object ShopItemSwipeCallBack {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
             //Toast.makeText(this@MainActivity, "on Swiped ", Toast.LENGTH_SHORT).show()
             //Remove swiped item from list and notify the RecyclerView
-            val position = viewHolder.adapterPosition
-            if (adapter != null) {
-                viewModel?.removeShopItem(adapter!!.currentList[position])
+            thread {
+                val position = viewHolder.adapterPosition
+                if (adapter != null) {
+                    viewModel?.removeShopItem(adapter!!.currentList[position])
+                }
             }
         }
     }

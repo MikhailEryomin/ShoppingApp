@@ -6,8 +6,12 @@ import com.example.shoppingapp.domain.EditShopItemUseCase
 import com.example.shoppingapp.domain.GetShopListUseCase
 import com.example.shoppingapp.domain.RemoveShopItemUseCase
 import com.example.shoppingapp.domain.ShopItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class MainViewModel @Inject constructor(
     private val editShopItemUseCase: EditShopItemUseCase,
@@ -23,6 +27,8 @@ class MainViewModel @Inject constructor(
     //stateFlow
     val shopList = getShopListUseCase.getShopList()
 
+    private val providerScope = CoroutineScope(Dispatchers.IO)
+
     // USE-CASES
     fun changeEnableState(item: ShopItem) {
         viewModelScope.launch {
@@ -32,8 +38,13 @@ class MainViewModel @Inject constructor(
     }
 
     fun removeShopItem(item: ShopItem) {
-        viewModelScope.launch {
+        providerScope.launch {
             removeShopListUseCase.removeShopItem(item)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        providerScope.cancel()
     }
 }
