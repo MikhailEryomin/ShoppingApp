@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kapt)
 }
 
 android {
     namespace = "com.example.shoppingapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.shoppingapp"
@@ -33,13 +34,28 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.viewmodel.scope)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    //Room
+    implementation(libs.room)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+
+    //Dagger
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
